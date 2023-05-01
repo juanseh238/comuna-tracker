@@ -12,7 +12,7 @@ data_criminalidad = gpd.read_file(
     "data/final/data_criminalidad.geojson", driver="GeoJSON"
 )
 
-with open("app/config.json", "r") as f:
+with open("config.json", "r") as f:
     FEATURE_CONFIG = json.load(f)["FEATURES"]
 
 
