@@ -1,0 +1,10 @@
+
+@font-face {
+    font-family: "Segoe";
+    src: url("Open_Sans/static/OpenSans-Medium.ttf") format("truetype");
+}
+
+*, html, body {
+    font-family: "Segoe";
+    color: #333;
+}

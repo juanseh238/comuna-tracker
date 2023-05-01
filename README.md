@@ -16,7 +16,12 @@ En esta carpeta, se encuentran 3 subdirectorios:
 ## Delitos
 
 ## Violencia de Género
+- `cantidad-de-dispositivos-antipanico.csv`: Botones antipánico no tiene datos desagregados, son dos filas con el total de botones distribuidos y accionamientos.
+- Tasa y totales de femicidios (`tas_femic_annio_limpio`, `vict_fem_annio__g_edad_limpio`) no están desagregados, son totales y proporciones anuales. 
+
 
 ## GeoJSON Comisarías
 
 ## Cambio de Hábitos
+- Datos de 2017 exclusivamente
+- No desagregados por comuna ni referencia geográfica
