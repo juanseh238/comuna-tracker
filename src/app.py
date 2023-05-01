@@ -34,6 +34,9 @@ fig = px.choropleth_mapbox(
         "center": {"lon": -58.4, "lat": -34.6},
         "zoom": 10,
     },
+    colorbar={
+        "title_text": FEATURE_CONFIG["score_robo"]["name"],
+    }
 )
 ## Description box
 ## add feature description
@@ -137,6 +140,9 @@ def update_plot(slider_value, feature_dropdown_value):
             "center": {"lon": -58.4, "lat": -34.6},
             "zoom": 10,
         },
+        colorbar={
+           "title_text": FEATURE_CONFIG[feature_dropdown_value]["name"],
+    }
     )
 
     # update the feature description
