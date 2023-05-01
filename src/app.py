@@ -19,9 +19,6 @@ with open("config.json", "r") as f:
 app = dash.Dash(__name__)
 server = app.server
 
-data_criminalidad["score_robo"] = data_criminalidad.score_robo.astype(int).astype(str)
-
-
 # Mapbox Choropleth
 fig = px.choropleth_mapbox(
     data_criminalidad,
