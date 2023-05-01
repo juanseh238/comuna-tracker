@@ -28,15 +28,15 @@ fig = px.choropleth_mapbox(
     color_discrete_map=FEATURE_CONFIG["score_robo"]["color_sequence"],
     opacity=0.5,
     locations="CO_FRAC_RA",
+    labels={
+        "score_robo": FEATURE_CONFIG["score_robo"]["name"],
+        "CO_FRAC_RA": "Código RC"},
 ).update_layout(
     mapbox={
         "style": "open-street-map",
         "center": {"lon": -58.4, "lat": -34.6},
         "zoom": 10,
     },
-    colorbar={
-        "title_text": FEATURE_CONFIG["score_robo"]["name"],
-    }
 )
 ## Description box
 ## add feature description
@@ -131,18 +131,18 @@ def update_plot(slider_value, feature_dropdown_value):
         geojson=data_criminalidad.set_index("CO_FRAC_RA").geometry,
         color=feature_dropdown_value,
         color_discrete_map=FEATURE_CONFIG[feature_dropdown_value]["color_sequence"],
-        category_orders={feature_dropdown_value: ["1", "2", "3", "4", "5"]},
+        category_orders={feature_dropdown_value: list(FEATURE_CONFIG[feature_dropdown_value]["color_sequence"].keys())},
         opacity=slider_value,
         locations="CO_FRAC_RA",
+    labels={feature_dropdown_value: FEATURE_CONFIG[feature_dropdown_value]["name"],
+            "CO_FRAC_RA": "Código RC"},
+
     ).update_layout(
         mapbox={
             "style": "open-street-map",
             "center": {"lon": -58.4, "lat": -34.6},
             "zoom": 10,
         },
-        colorbar={
-           "title_text": FEATURE_CONFIG[feature_dropdown_value]["name"],
-    }
     )
 
     # update the feature description

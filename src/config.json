@@ -42,8 +42,8 @@
             "type": "binary",
             "description": "Variable que indica si el radio censal presenta al menos un homicidio reportado entre 2021 y 2022.",
             "color_sequence":{
-                "Reportado": "#FF3333",
-                "No reportado": "#D3D3D3"
+                "Reportado": "#E60000",
+                "No reportado": "#606b63"
               }              
         }
     }
