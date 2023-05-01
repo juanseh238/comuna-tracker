@@ -1,0 +1,4 @@
+dash==2.9.3
+geopandas==0.12.2
+plotly==5.14.1
+simplejson==3.19.1

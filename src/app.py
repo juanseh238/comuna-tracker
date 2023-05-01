@@ -5,27 +5,30 @@ import os
 os.environ["USE_PYGEOS"] = "0"
 import geopandas as gpd
 import plotly.express as px
+import simplejson as json
 
 # Load data
 data_criminalidad = gpd.read_file(
     "data/final/data_criminalidad.geojson", driver="GeoJSON"
 )
 
-FEATURES = [
-    col
-    for col in data_criminalidad.columns.tolist()
-    if col not in ["geometry", "CO_FRAC_RA"]
-]
+with open("app/config.json", "r") as f:
+    FEATURE_CONFIG = json.load(f)["FEATURES"]
 
 
 app = dash.Dash(__name__)
+server = app.server
+
+data_criminalidad["score_robo"] = data_criminalidad.score_robo.astype(int).astype(str)
+
 
 # Mapbox Choropleth
 fig = px.choropleth_mapbox(
     data_criminalidad,
     geojson=data_criminalidad.set_index("CO_FRAC_RA").geometry,
     color="score_robo",
-    color_discrete_sequence="score_robo",
+    category_orders={"score_robo": ["1", "2", "3", "4", "5"]},
+    color_discrete_map=FEATURE_CONFIG["score_robo"]["color_sequence"],
     opacity=0.5,
     locations="CO_FRAC_RA",
 ).update_layout(
@@ -36,17 +39,21 @@ fig = px.choropleth_mapbox(
     },
 )
 ## Description box
-# Make a custom div with a box holding description of the plot, a slider for reducing opacity and
-# a dropdown to select the variable to plot
+## add feature description
 description_box = html.Div(
     [
-        html.H2("Mapa de criminalidad en la CABA"),
+        html.H3(FEATURE_CONFIG["score_robo"]["name"], id="feature-name"),
         html.P(
-            "Este mapa muestra la cantidad de robos por cada 1000 habitantes en cada barrio de la CABA. \
-        El color de cada barrio indica la cantidad de robos, siendo el rojo el color que indica mayor \
-        cantidad de robos y el amarillo el que indica menor cantidad de robos. \
-        El mapa se puede filtrar por año y por tipo de robo."
+            FEATURE_CONFIG["score_robo"]["description"], id="feature-description"
         ),
+    ], id="description-box", style={"margin-top": "25px", "margin-bottom": "25px"}
+)
+
+# Make a custom div with a box holding description of the plot, a slider for reducing opacity and
+# a dropdown to select the variable to plot
+control_box = html.Div(
+    [
+        html.H2("Indicadores de Nivel de Servicio en CABA"),
         html.Div(
             [
                 html.Div(
@@ -90,16 +97,21 @@ description_box = html.Div(
                 "flex-direction": "row",
                 "justify-content": "space-around",
             },
-        )
+        ),
+        description_box
     ],
     # add a light background color and some padding to the box
-    style={"background-color": "lightgrey", "padding": "10px"},
+    style={"background-color": "lightgrey",
+         "padding": "10px", "padding-left": "20px", "padding-right": "20px",
+         "border-radius": "5px"},
 )
+
+
 
 
 app.layout = html.Div(
     [
-        description_box,
+        control_box,
         dcc.Graph(figure=fig, id="map", style={"height": "100vh"}),
     ],
     style={"margin": "auto", "padding": "10px"},
@@ -109,17 +121,17 @@ app.layout = html.Div(
 ## Callbacks
 # update plot opacity based on slider value
 @app.callback(
-    Output("map", "figure"),
+    [Output("map", "figure"), Output("description-box", "children")],
     [Input("opacity-slider", "value"), Input("feature-dropdown", "value")],
 )
-def update_opacity(slider_value, feature_dropdown_value):
-
+def update_plot(slider_value, feature_dropdown_value):
     # draw a new figure when dropdown changes
     fig = px.choropleth_mapbox(
         data_criminalidad,
         geojson=data_criminalidad.set_index("CO_FRAC_RA").geometry,
         color=feature_dropdown_value,
-        color_continuous_scale="Reds",
+        color_discrete_map=FEATURE_CONFIG[feature_dropdown_value]["color_sequence"],
+        category_orders={feature_dropdown_value: ["1", "2", "3", "4", "5"]},
         opacity=slider_value,
         locations="CO_FRAC_RA",
     ).update_layout(
@@ -130,9 +142,18 @@ def update_opacity(slider_value, feature_dropdown_value):
         },
     )
 
+    # update the feature description
+    description_box_children = [
+        html.H3(FEATURE_CONFIG[feature_dropdown_value]["name"], id="feature-name"),
+        html.P(
+            FEATURE_CONFIG[feature_dropdown_value]["description"],
+            id="feature-description",
+        ),
+    ]
+
     fig.update_traces(marker_opacity=slider_value)
     fig.update_layout(uirevision="constant")
-    return fig
+    return fig, description_box_children
 
 
 if __name__ == "__main__":
