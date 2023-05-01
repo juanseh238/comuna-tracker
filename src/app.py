@@ -8,9 +8,16 @@ import plotly.express as px
 import simplejson as json
 
 # Load data
-data_criminalidad = gpd.read_file(
+
+DATA = {
+    "delitos": gpd.read_file(
     "data/final/data_criminalidad.geojson", driver="GeoJSON"
+),
+    "comisarias": gpd.read_file(
+    "data/final/comisarias.geojson", driver="GeoJSON"
 )
+}
+
 
 with open("config.json", "r") as f:
     FEATURE_CONFIG = json.load(f)["FEATURES"]
@@ -20,9 +27,10 @@ app = dash.Dash(__name__)
 server = app.server
 
 # Mapbox Choropleth
+# initialized with robos
 fig = px.choropleth_mapbox(
-    data_criminalidad,
-    geojson=data_criminalidad.set_index("CO_FRAC_RA").geometry,
+    DATA["delitos"],
+    geojson=DATA["delitos"].set_index("CO_FRAC_RA").geometry,
     color="score_robo",
     category_orders={"score_robo": ["1", "2", "3", "4", "5"]},
     color_discrete_map=FEATURE_CONFIG["score_robo"]["color_sequence"],
@@ -85,6 +93,7 @@ control_box = html.Div(
                                     "label": "Homicidio reportado",
                                     "value": "homicidio_reportado",
                                 },
+                                {"label": "Distancia a comisarias", "value": "quintil_distancia_comisaria"}
                             ],
                             value="score_robo",
                             clearable=False,
@@ -125,10 +134,15 @@ app.layout = html.Div(
     [Input("opacity-slider", "value"), Input("feature-dropdown", "value")],
 )
 def update_plot(slider_value, feature_dropdown_value):
+
+    source = FEATURE_CONFIG[feature_dropdown_value]["source"]
+    data = DATA[source]
+    
+
     # draw a new figure when dropdown changes
     fig = px.choropleth_mapbox(
-        data_criminalidad,
-        geojson=data_criminalidad.set_index("CO_FRAC_RA").geometry,
+        data,
+        geojson=data.set_index("CO_FRAC_RA").geometry,
         color=feature_dropdown_value,
         color_discrete_map=FEATURE_CONFIG[feature_dropdown_value]["color_sequence"],
         category_orders={feature_dropdown_value: list(FEATURE_CONFIG[feature_dropdown_value]["color_sequence"].keys())},

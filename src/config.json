@@ -3,6 +3,7 @@
         "score_robo": {
             "name": "Cantidad de Denuncias por Robos",
             "type": "discrete",
+            "source": "delitos",
             "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de robos (con violencia) reportados. Un valor de 5 implica que el radio censal presenta más robos reportados que el 80% de los radios censales de la ciudad.",
             "color_sequence": {
                 "1": "#FFC1C1",
@@ -10,12 +11,12 @@
                 "3": "#FF5C5C",
                 "4": "#E60000",
                 "5": "#990000"
-              }
-              
+            }
         },
         "score_hurtos": {
             "name": "Cantidad de Denuncias por Hurtos",
             "type": "discrete",
+            "source": "delitos",
             "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de hurtos (sin violencia) reportados. Un valor de 5 implica que el radio censal presenta más robos reportados que el 80% de los radios censales de la ciudad.",
             "color_sequence": {
                 "1": "#FFC1C1",
@@ -23,28 +24,41 @@
                 "3": "#FF5C5C",
                 "4": "#E60000",
                 "5": "#990000"
-              }
-              
+            }
         },
         "score_lesiones": {
             "name": "Cantidad de Denuncias por Lesiones",
             "type": "discrete",
+            "source": "delitos",
             "description": "Valor que representa la cantidad de denuncias por lesiones reportadas en el radio censal. La cantidad se encuentra concentrada en un número reducido de radios censales, caracterizados por una alta cantidad (superior a 8 denuncias, en algunos radios llegando a más de 30), mientras que una cantidad moderada se asocia a entre 3 y 6 y una cantidad baja corresponde a 1 o 2 reportes de lesiones.",
-            "color_sequence":{
+            "color_sequence": {
                 "Alta": "#FF3333",
                 "Moderada": "#FFCC33",
                 "Baja": "#33CC33"
-              }
-              
+            }
         },
         "homicidio_reportado": {
             "name": "Existencia de Homicidios Reportados",
             "type": "binary",
+            "source": "delitos",
             "description": "Variable que indica si el radio censal presenta al menos un homicidio reportado entre 2021 y 2022.",
-            "color_sequence":{
+            "color_sequence": {
                 "Reportado": "#E60000",
                 "No reportado": "#606b63"
-              }              
+            }
+        },
+        "quintil_distancia_comisaria": {
+            "name": "Distancia a Comisaría",
+            "type": "discrete",
+            "source": "comisarias",
+            "description": "Variable que indica cuán lejos está el radio censal (medido desde su centro) de la comisaría más cercana. Un valor de 1 implica que el radio censal se encuentra a menos de 1 km de la comisaría más cercana, mientras que un valor de 1 implica más cerca que el 20% de los radios censales y 5 está entre el 20% más lejano a su comisaría más cercana.",
+            "color_sequence": {
+                "1": "#FFC1C1",
+                "2": "#FF8F8F",
+                "3": "#FF5C5C",
+                "4": "#E60000",
+                "5": "#990000"
+            }
         }
     }
 }
