@@ -1,9 +1,26 @@
 {
+    "SETTINGS": {
+        "comunas": {
+            "name": "Comunas",
+            "scope": "comunas",
+            "description": "Comunas de la Ciudad de Buenos Aires",
+            "location_field": "comuna",
+            "location_field_label": "Comuna"
+        },
+        "radios_censales": {
+            "name": "Radios Censales",
+            "scope": "radios_censales",
+            "description": "Radios Censales de la Ciudad de Buenos Aires",
+            "location_field": "CO_FRAC_RA",
+            "location_field_label": "Radio Censal"
+        }
+    },
     "FEATURES": {
         "score_robo": {
             "name": "Cantidad de Denuncias por Robos",
             "type": "discrete",
             "source": "delitos",
+            "scope": "radios_censales",
             "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de robos (con violencia) reportados. Un valor de 5 implica que el radio censal presenta más robos reportados que el 80% de los radios censales de la ciudad.",
             "color_sequence": {
                 "1": "#FFC1C1",
@@ -17,6 +34,7 @@
             "name": "Cantidad de Denuncias por Hurtos",
             "type": "discrete",
             "source": "delitos",
+            "scope": "radios_censales",
             "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de hurtos (sin violencia) reportados. Un valor de 5 implica que el radio censal presenta más robos reportados que el 80% de los radios censales de la ciudad.",
             "color_sequence": {
                 "1": "#FFC1C1",
@@ -30,6 +48,7 @@
             "name": "Cantidad de Denuncias por Lesiones",
             "type": "discrete",
             "source": "delitos",
+            "scope": "radios_censales",
             "description": "Valor que representa la cantidad de denuncias por lesiones reportadas en el radio censal. La cantidad se encuentra concentrada en un número reducido de radios censales, caracterizados por una alta cantidad (superior a 8 denuncias, en algunos radios llegando a más de 30), mientras que una cantidad moderada se asocia a entre 3 y 6 y una cantidad baja corresponde a 1 o 2 reportes de lesiones.",
             "color_sequence": {
                 "Alta": "#FF3333",
@@ -41,6 +60,7 @@
             "name": "Existencia de Homicidios Reportados",
             "type": "binary",
             "source": "delitos",
+            "scope": "radios_censales",
             "description": "Variable que indica si el radio censal presenta al menos un homicidio reportado entre 2021 y 2022.",
             "color_sequence": {
                 "Reportado": "#E60000",
@@ -51,6 +71,7 @@
             "name": "Distancia a Comisaría",
             "type": "discrete",
             "source": "comisarias",
+            "scope": "radios_censales",
             "description": "Variable que indica cuán lejos está el radio censal (medido desde su centro) de la comisaría más cercana. Un valor de 1 implica que el radio censal se encuentra a menos de 1 km de la comisaría más cercana, mientras que un valor de 1 implica más cerca que el 20% de los radios censales y 5 está entre el 20% más lejano a su comisaría más cercana.",
             "color_sequence": {
                 "1": "#FFC1C1",
@@ -64,7 +85,8 @@
             "name": "Cantidad de Denuncias por Amenazas",
             "type": "discrete",
             "source": "comunas_vdg",
-            "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de amenazas reportadas en el marco de las denuncias por Violencia de Género. Un valor de 5 implica que el radio censal presenta más amenazas reportadas que el 80% de los radios censales de la ciudad.",
+            "scope": "comunas",
+            "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de amenazas reportadas en el marco de las denuncias por violencia de género. Un valor de 5 implica que el radio censal presenta más amenazas reportadas que el 80% de los radios censales de la ciudad.",
             "color_sequence": {
                 "1": "#FFC1C1",
                 "2": "#FF8F8F",
@@ -76,7 +98,8 @@
                 "name": "Cantidad de Acciones por Protección de Persona",
                 "type": "discrete",
                 "source": "comunas_vdg",
-                "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de acciones de protección de persona reportadas en el marco de las denuncias por Violencia de Género. Un valor de 5 implica que el radio censal presenta más acciones de protección de persona reportadas que el 80% de los radios censales de la ciudad.",
+                "scope": "comunas",
+                "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución del número de operaciones de asistencia a personas para la protección de personas involucradas en denuncias de violencia de género. Un valor de 5 implica que el radio censal presenta más acciones de protección de persona reportadas que el 80% de los radios censales de la ciudad.",
                 "color_sequence": {
                     "1": "#FFC1C1",
                     "2": "#FF8F8F",
@@ -89,7 +112,8 @@
                 "name": "Cantidad de Denuncias por Violencia Familiar",
                 "type": "discrete",
                 "source": "comunas_vdg",
-                "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de denuncias por violencia familiar reportadas en el marco de las denuncias por Violencia de Género. Un valor de 5 implica que el radio censal presenta más denuncias por violencia familiar reportadas que el 80% de los radios censales de la ciudad.",
+                "scope": "comunas",
+                "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de denuncias por violencia familiar reportadas en el marco de las denuncias por violencia de género. Un valor de 5 implica que el radio censal presenta más denuncias por violencia familiar reportadas que el 80% de los radios censales de la ciudad.",
                 "color_sequence": {
                     "1": "#FFC1C1",
                     "2": "#FF8F8F",

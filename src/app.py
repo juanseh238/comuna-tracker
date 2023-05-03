@@ -10,54 +10,72 @@ import simplejson as json
 # Load data
 
 DATA = {
-    "delitos": gpd.read_file(
-    "data/final/data_criminalidad.geojson", driver="GeoJSON"
-),
-    "comisarias": gpd.read_file(
-    "data/final/comisarias.geojson", driver="GeoJSON"
-),
-    "comunas_vdg" : gpd.read_file(
-    "data/final/violencia-de-genero.geojson", driver="GeoJSON"
-    )
+    "radios_censales": {
+        "delitos": gpd.read_file(
+            "data/final/data_criminalidad.geojson", driver="GeoJSON"
+        ),
+        "comisarias": gpd.read_file("data/final/comisarias.geojson", driver="GeoJSON"),
+    },
+    "comunas": {
+        "violencia_de_genero": gpd.read_file(
+            "data/final/violencia-de-genero.geojson", driver="GeoJSON"
+        )
+    },
 }
 
 
 with open("config.json", "r") as f:
-    FEATURE_CONFIG = json.load(f)["FEATURES"]
+    CONFIG = json.load(f)
+    FEATURE_CONFIG = CONFIG["FEATURES"]
+    SETTINGS_CONFIG = CONFIG["SETTINGS"]
 
+DEFAULT_SCOPE = "radios_censales"
 
 app = dash.Dash(__name__)
 server = app.server
 
 # Mapbox Choropleth
 # initialized with robos
-fig = px.choropleth_mapbox(
-    DATA["delitos"],
-    geojson=DATA["delitos"].set_index("CO_FRAC_RA").geometry,
-    color="score_robo",
-    category_orders={"score_robo": ["1", "2", "3", "4", "5"]},
-    color_discrete_map=FEATURE_CONFIG["score_robo"]["color_sequence"],
-    opacity=0.5,
-    locations="CO_FRAC_RA",
-    labels={
-        "score_robo": FEATURE_CONFIG["score_robo"]["name"],
-        "CO_FRAC_RA": "Código RC"},
-).update_layout(
-    mapbox={
-        "style": "open-street-map",
-        "center": {"lon": -58.4, "lat": -34.6},
-        "zoom": 10,
-    },
-)
+# fig = px.choropleth_mapbox(
+#     DATA["radios_censales"]["delitos"],
+#     geojson=DATA["radios_censales"]["delitos"].set_index("CO_FRAC_RA").geometry,
+#     color="score_robo",
+#     category_orders={"score_robo": ["1", "2", "3", "4", "5"]},
+#     color_discrete_map=FEATURE_CONFIG["score_robo"]["color_sequence"],
+#     opacity=0.5,
+#     locations="CO_FRAC_RA",
+#     labels={
+#         "score_robo": FEATURE_CONFIG["score_robo"]["name"],
+#         "CO_FRAC_RA": "Código RC",
+#     },
+# ).update_layout(
+#     mapbox={
+#         "style": "open-street-map",
+#         "center": {"lon": -58.4, "lat": -34.6},
+#         "zoom": 10,
+#     },
+# )
 ## Description box
 ## add feature description
 description_box = html.Div(
     [
         html.H3(FEATURE_CONFIG["score_robo"]["name"], id="feature-name"),
-        html.P(
-            FEATURE_CONFIG["score_robo"]["description"], id="feature-description"
-        ),
-    ], id="description-box", style={"margin-top": "25px", "margin-bottom": "25px"}
+        html.P(FEATURE_CONFIG["score_robo"]["description"], id="feature-description"),
+    ],
+    id="description-box",
+    style={"margin-top": "25px", "margin-bottom": "25px"},
+)
+
+## Scope Radio button
+## use a radio button to select the scope of the plots: comunas or radios censales
+scope_radio = dcc.RadioItems(
+    id="scope-radio",
+    options=[
+        {"label": "Comunas", "value": "comunas"},
+        {"label": "Radios Censales", "value": "radios_censales"},
+    ],
+    value=DEFAULT_SCOPE,
+    labelStyle={"display": "inline-block"},
 )
 
 # Make a custom div with a box holding description of the plot, a slider for reducing opacity and
@@ -65,6 +83,17 @@ description_box = html.Div(
 control_box = html.Div(
     [
         html.H2("Indicadores de Nivel de Servicio en CABA"),
+        html.Div(
+            scope_radio,
+            style={
+                "margin-bottom": "25px",
+                "align-items": "center",
+                "justify-content": "center",
+                "display": "flex",
+                "flex-direction": "row",
+                "fontsize": "40px",
+            },
+        ),
         html.Div(
             [
                 html.Div(
@@ -88,18 +117,18 @@ control_box = html.Div(
                         html.P("Seleccioná el indicador de interés para graficar:"),
                         dcc.Dropdown(
                             id="feature-dropdown",
-                            options=[
-                                {"label": "Robos", "value": "score_robo"},
-                                {"label": "Hurtos", "value": "score_hurtos"},
-                                {"label": "Lesiones", "value": "score_lesiones"},
-                                {
-                                    "label": "Homicidio reportado",
-                                    "value": "homicidio_reportado",
-                                },
-                                {"label": "Distancia a comisarias", "value": "quintil_distancia_comisaria"}
-                            ],
-                            value="score_robo",
                             clearable=False,
+                            # default options to radios censales
+                            options=[
+                                {
+                                    "label": FEATURE_CONFIG[feature]["name"],
+                                    "value": feature,
+                                }
+                                for feature in FEATURE_CONFIG
+                                if DEFAULT_SCOPE in FEATURE_CONFIG[feature]["scope"]
+                            ],
+                            # add a default text hinting at selecting a radio item first
+                            placeholder="Seleccioná un indicador",
                         ),
                     ]
                 ),
@@ -110,57 +139,116 @@ control_box = html.Div(
                 "justify-content": "space-around",
             },
         ),
-        description_box
+        description_box,
     ],
     # add a light background color and some padding to the box
-    style={"background-color": "lightgrey",
-         "padding": "10px", "padding-left": "20px", "padding-right": "20px",
-         "border-radius": "5px"},
+    style={
+        "background-color": "lightgrey",
+        "padding": "10px",
+        "padding-left": "20px",
+        "padding-right": "20px",
+        "border-radius": "5px",
+    },
 )
-
-
 
 
 app.layout = html.Div(
     [
         control_box,
-        dcc.Graph(figure=fig, id="map", style={"height": "100vh"}),
+        html.Div(
+            id="graph-container"
+        ),
     ],
     style={"margin": "auto", "padding": "10px"},
+    id="main-container",
 )
 
 
 ## Callbacks
-# update plot opacity based on slider value
+# update dropdown options based on radio button selection
 @app.callback(
-    [Output("map", "figure"), Output("description-box", "children")],
-    [Input("opacity-slider", "value"), Input("feature-dropdown", "value")],
+    Output("feature-dropdown", "options"),
+    [Input("scope-radio", "value")],
 )
-def update_plot(slider_value, feature_dropdown_value):
+def update_dropdown(scope_radio_value):
+    """
+    Update dropdown options bsaed on radio button selection.
+    The radio button selection value matches the 'scope' field in the FEATURES config dict.
+    """
+    scope = SETTINGS_CONFIG[scope_radio_value]["scope"]
+    options = [
+        {"label": FEATURE_CONFIG[feature]["name"], "value": feature}
+        for feature in FEATURE_CONFIG
+        if scope in FEATURE_CONFIG[feature]["scope"]
+    ]
+    return options
+
+
+# update plot according to control box settings
+@app.callback(
+    [
+        Output("graph-container", "style"),
+        Output("graph-container", "children"),
+        # Output("mapbox-choropleth", "figure"),
+        Output("description-box", "children"),
+    ],
+    [
+        Input("opacity-slider", "value"),
+        Input("feature-dropdown", "value"),
+        Input("scope-radio", "value"),
+    ],
+)
+def update_plot(slider_value, feature_dropdown_value, scope_radio_value):
+    # hide graph if no feature is selected
+    if not feature_dropdown_value:
+        hidden_graph_style = {"display": "none"}
+        return hidden_graph_style, None, None
+
+    # hide graph if selected feature is not available for selected scope
+    if scope_radio_value not in FEATURE_CONFIG[feature_dropdown_value]["scope"]:
+        hidden_graph_style = {"display": "none"}
+        return hidden_graph_style, None, None
 
     source = FEATURE_CONFIG[feature_dropdown_value]["source"]
-    data = DATA[source]
-    
+    data = DATA[scope_radio_value][source]
+
+    location_field = SETTINGS_CONFIG[scope_radio_value]["location_field"]
+    print("Location field: ", location_field)
+    print("Feature dropdown value: ", feature_dropdown_value)
+    print("Scope radio value: ", scope_radio_value)
 
     # draw a new figure when dropdown changes
-    fig = px.choropleth_mapbox(
-        data,
-        geojson=data.set_index("CO_FRAC_RA").geometry,
-        color=feature_dropdown_value,
-        color_discrete_map=FEATURE_CONFIG[feature_dropdown_value]["color_sequence"],
-        category_orders={feature_dropdown_value: list(FEATURE_CONFIG[feature_dropdown_value]["color_sequence"].keys())},
-        opacity=slider_value,
-        locations="CO_FRAC_RA",
-    labels={feature_dropdown_value: FEATURE_CONFIG[feature_dropdown_value]["name"],
-            "CO_FRAC_RA": "Código RC"},
-
-    ).update_layout(
-        mapbox={
-            "style": "open-street-map",
-            "center": {"lon": -58.4, "lat": -34.6},
-            "zoom": 10,
-        },
+    fig = (
+        px.choropleth_mapbox(
+            data,
+            geojson=data.set_index(location_field).geometry,
+            color=feature_dropdown_value,
+            color_discrete_map=FEATURE_CONFIG[feature_dropdown_value]["color_sequence"],
+            category_orders={
+                feature_dropdown_value: list(
+                    FEATURE_CONFIG[feature_dropdown_value]["color_sequence"].keys()
+                )
+            },
+            opacity=slider_value,
+            locations=location_field,
+            labels={
+                feature_dropdown_value: FEATURE_CONFIG[feature_dropdown_value]["name"],
+                location_field: SETTINGS_CONFIG[scope_radio_value][
+                    "location_field_label"
+                ],
+            },
+        )
+        .update_layout(
+            mapbox={
+                "style": "open-street-map",
+                "center": {"lon": -58.4, "lat": -34.6},
+                "zoom": 10,
+            },
+        )
     )
+
+    fig.update_traces(marker_opacity=slider_value)
+    fig.update_layout(uirevision="constant")
 
     # update the feature description
     description_box_children = [
@@ -171,9 +259,9 @@ def update_plot(slider_value, feature_dropdown_value):
         ),
     ]
 
-    fig.update_traces(marker_opacity=slider_value)
-    fig.update_layout(uirevision="constant")
-    return fig, description_box_children
+    display_graph_style = {"display": "flex", "width": "100vw"}
+    
+    return display_graph_style, dcc.Graph(figure=fig), description_box_children
 
 
 if __name__ == "__main__":
