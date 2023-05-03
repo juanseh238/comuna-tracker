@@ -169,6 +169,7 @@ def update_dropdown(scope_radio_value):
     The radio button selection value matches the 'scope' field in the FEATURES config dict.
     """
     scope = SETTINGS_CONFIG[scope_radio_value]["scope"]
+    print([feature for feature in FEATURE_CONFIG])
     options = [
         {"label": FEATURE_CONFIG[feature]["name"], "value": feature}
         for feature in FEATURE_CONFIG

@@ -93,34 +93,34 @@
                 "3": "#FF5C5C",
                 "4": "#E60000",
                 "5": "#990000"
-            },
-            "quintil_proteccion_de_persona": {
-                "name": "Cantidad de Acciones por Protección de Persona",
-                "type": "discrete",
-                "source": "violencia_de_genero",
-                "scope": "comunas",
-                "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución del número de operaciones de asistencia a personas para la protección de personas involucradas en denuncias de violencia de género. Un valor de 5 implica que el radio censal presenta más acciones de protección de persona reportadas que el 80% de los radios censales de la ciudad.",
-                "color_sequence": {
-                    "1": "#FFC1C1",
-                    "2": "#FF8F8F",
-                    "3": "#FF5C5C",
-                    "4": "#E60000",
-                    "5": "#990000"
-                }
-            },
-            "quintil_violencia_familiar": {
-                "name": "Cantidad de Denuncias por Violencia Familiar",
-                "type": "discrete",
-                "source": "violencia_de_genero",
-                "scope": "comunas",
-                "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de denuncias por violencia familiar reportadas en el marco de las denuncias por violencia de género. Un valor de 5 implica que el radio censal presenta más denuncias por violencia familiar reportadas que el 80% de los radios censales de la ciudad.",
-                "color_sequence": {
-                    "1": "#FFC1C1",
-                    "2": "#FF8F8F",
-                    "3": "#FF5C5C",
-                    "4": "#E60000",
-                    "5": "#990000"
-                }
+            }
+        },
+        "quintil_proteccion_de_persona": {
+            "name": "Cantidad de Acciones por Protección de Persona",
+            "type": "discrete",
+            "source": "violencia_de_genero",
+            "scope": "comunas",
+            "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución del número de operaciones de asistencia a personas para la protección de personas involucradas en denuncias de violencia de género. Un valor de 5 implica que el radio censal presenta más acciones de protección de persona reportadas que el 80% de los radios censales de la ciudad.",
+            "color_sequence": {
+                "1": "#FFC1C1",
+                "2": "#FF8F8F",
+                "3": "#FF5C5C",
+                "4": "#E60000",
+                "5": "#990000"
+            }
+        },
+        "quintil_violencia_familiar": {
+            "name": "Cantidad de Denuncias por Violencia Familiar",
+            "type": "discrete",
+            "source": "violencia_de_genero",
+            "scope": "comunas",
+            "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de cantidad de denuncias por violencia familiar reportadas en el marco de las denuncias por violencia de género. Un valor de 5 implica que el radio censal presenta más denuncias por violencia familiar reportadas que el 80% de los radios censales de la ciudad.",
+            "color_sequence": {
+                "1": "#FFC1C1",
+                "2": "#FF8F8F",
+                "3": "#FF5C5C",
+                "4": "#E60000",
+                "5": "#990000"
             }
         }
     }
