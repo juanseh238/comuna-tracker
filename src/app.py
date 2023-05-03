@@ -34,27 +34,6 @@ DEFAULT_SCOPE = "radios_censales"
 app = dash.Dash(__name__)
 server = app.server
 
-# Mapbox Choropleth
-# initialized with robos
-# fig = px.choropleth_mapbox(
-#     DATA["radios_censales"]["delitos"],
-#     geojson=DATA["radios_censales"]["delitos"].set_index("CO_FRAC_RA").geometry,
-#     color="score_robo",
-#     category_orders={"score_robo": ["1", "2", "3", "4", "5"]},
-#     color_discrete_map=FEATURE_CONFIG["score_robo"]["color_sequence"],
-#     opacity=0.5,
-#     locations="CO_FRAC_RA",
-#     labels={
-#         "score_robo": FEATURE_CONFIG["score_robo"]["name"],
-#         "CO_FRAC_RA": "Código RC",
-#     },
-# ).update_layout(
-#     mapbox={
-#         "style": "open-street-map",
-#         "center": {"lon": -58.4, "lat": -34.6},
-#         "zoom": 10,
-#     },
-# )
 ## Description box
 ## add feature description
 description_box = html.Div(
@@ -267,7 +246,7 @@ def update_plot(slider_value, feature_dropdown_value, scope_radio_value):
         ),
     ]
 
-    display_graph_style = {"width": "100vw"}
+    display_graph_style = {"display": "block"}
 
     graph = dcc.Graph(figure=fig, style={"height": "100vh"})
 
