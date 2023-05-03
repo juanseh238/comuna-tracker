@@ -15,7 +15,10 @@ DATA = {
 ),
     "comisarias": gpd.read_file(
     "data/final/comisarias.geojson", driver="GeoJSON"
-)
+),
+    "comunas_vdg" : gpd.read_file(
+    "data/final/violencia-de-genero.geojson", driver="GeoJSON"
+    )
 }
 
 
