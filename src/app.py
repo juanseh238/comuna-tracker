@@ -68,15 +68,31 @@ description_box = html.Div(
 
 ## Scope Radio button
 ## use a radio button to select the scope of the plots: comunas or radios censales
-scope_radio = dcc.RadioItems(
-    id="scope-radio",
-    options=[
-        {"label": "Comunas", "value": "comunas"},
-        {"label": "Radios Censales", "value": "radios_censales"},
+scope_radio = html.Div(
+    [
+        html.H3("Nivel", style={"margin-right": "10px", "text-align": "center", "font-size": "20px"}),
+        dcc.RadioItems(
+            id="scope-radio",
+            options=[
+                {"label": "Comunas", "value": "comunas"},
+                {"label": "Radios Censales", "value": "radios_censales"},
+            ],
+            value=DEFAULT_SCOPE,
+            labelStyle={
+                "font-size": "18px",
+            },
+            style={
+                "display": "flex",
+                "flex-direction": "row",
+                "justify-content": "space-between",
+                "align-items": "center",
+                "gap": "30px",
+            },
+        ),
     ],
-    value=DEFAULT_SCOPE,
-    labelStyle={"display": "inline-block"},
+    style={"display": "flex", "flex-direction": "row", "justify-content": "center","gap": "30px"}
 )
+
 
 # Make a custom div with a box holding description of the plot, a slider for reducing opacity and
 # a dropdown to select the variable to plot
@@ -155,9 +171,7 @@ control_box = html.Div(
 app.layout = html.Div(
     [
         control_box,
-        html.Div(
-            id="graph-container"
-        ),
+        html.Div(id="graph-container"),
     ],
     style={"margin": "auto", "padding": "10px"},
     id="main-container",
@@ -189,7 +203,6 @@ def update_dropdown(scope_radio_value):
     [
         Output("graph-container", "style"),
         Output("graph-container", "children"),
-        # Output("mapbox-choropleth", "figure"),
         Output("description-box", "children"),
     ],
     [
@@ -218,33 +231,28 @@ def update_plot(slider_value, feature_dropdown_value, scope_radio_value):
     print("Scope radio value: ", scope_radio_value)
 
     # draw a new figure when dropdown changes
-    fig = (
-        px.choropleth_mapbox(
-            data,
-            geojson=data.set_index(location_field).geometry,
-            color=feature_dropdown_value,
-            color_discrete_map=FEATURE_CONFIG[feature_dropdown_value]["color_sequence"],
-            category_orders={
-                feature_dropdown_value: list(
-                    FEATURE_CONFIG[feature_dropdown_value]["color_sequence"].keys()
-                )
-            },
-            opacity=slider_value,
-            locations=location_field,
-            labels={
-                feature_dropdown_value: FEATURE_CONFIG[feature_dropdown_value]["name"],
-                location_field: SETTINGS_CONFIG[scope_radio_value][
-                    "location_field_label"
-                ],
-            },
-        )
-        .update_layout(
-            mapbox={
-                "style": "open-street-map",
-                "center": {"lon": -58.4, "lat": -34.6},
-                "zoom": 10,
-            },
-        )
+    fig = px.choropleth_mapbox(
+        data,
+        geojson=data.set_index(location_field).geometry,
+        color=feature_dropdown_value,
+        color_discrete_map=FEATURE_CONFIG[feature_dropdown_value]["color_sequence"],
+        category_orders={
+            feature_dropdown_value: list(
+                FEATURE_CONFIG[feature_dropdown_value]["color_sequence"].keys()
+            )
+        },
+        opacity=slider_value,
+        locations=location_field,
+        labels={
+            feature_dropdown_value: FEATURE_CONFIG[feature_dropdown_value]["name"],
+            location_field: SETTINGS_CONFIG[scope_radio_value]["location_field_label"],
+        },
+    ).update_layout(
+        mapbox={
+            "style": "open-street-map",
+            "center": {"lon": -58.4, "lat": -34.6},
+            "zoom": 11,
+        },
     )
 
     fig.update_traces(marker_opacity=slider_value)
@@ -259,9 +267,11 @@ def update_plot(slider_value, feature_dropdown_value, scope_radio_value):
         ),
     ]
 
-    display_graph_style = {"display": "flex", "width": "100vw"}
-    
-    return display_graph_style, dcc.Graph(figure=fig), description_box_children
+    display_graph_style = {"width": "100vw"}
+
+    graph = dcc.Graph(figure=fig, style={"height": "100vh"})
+
+    return display_graph_style, graph, description_box_children
 
 
 if __name__ == "__main__":
