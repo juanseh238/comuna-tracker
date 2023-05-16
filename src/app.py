@@ -1,5 +1,6 @@
 from dash import dcc, html, Input, Output
 import dash
+import dash_bootstrap_components as dbc
 import os
 
 os.environ["USE_PYGEOS"] = "0"
@@ -31,7 +32,7 @@ with open("config.json", "r") as f:
 
 DEFAULT_SCOPE = "radios_censales"
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
 ## Description box
