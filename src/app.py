@@ -33,7 +33,7 @@ with open("config.json", "r") as f:
     FEATURE_CONFIG = CONFIG["FEATURES"]
     SETTINGS_CONFIG = CONFIG["SETTINGS"]
 
-DEFAULT_SCOPE = "radios_censales"
+DEFAULT_SCOPE = "comunas"
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
@@ -283,6 +283,8 @@ def update_plot(
     if FEATURE_CONFIG[feature_dropdown_value]["type"] == "continuous":
         colorbar_settings = FEATURE_CONFIG[feature_dropdown_value]["colorbar_settings"]
         range_color = (FEATURE_CONFIG[feature_dropdown_value]["range_color_min"], FEATURE_CONFIG[feature_dropdown_value]["range_color_max"])
+        tickformat=colorbar_settings["tickformat"] if "tickformat" in colorbar_settings else ".2f"
+        hovertemplate = f"<b>%{{customdata[0]}}</b><br><br>{FEATURE_CONFIG[feature_dropdown_value]['name']}: %{{z:{tickformat}}}<br><br>"
         # draw a new figure when dropdown changes
         fig = (
             px.choropleth_mapbox(
@@ -310,7 +312,10 @@ def update_plot(
                 },
                 coloraxis={"colorbar":colorbar_settings},
             )
-            .update_traces(marker_opacity=slider_value)
+            .update_traces(marker_opacity=slider_value, 
+                hovertemplate=hovertemplate
+                           
+                           )
             .update_layout(uirevision="constant")
         )
 

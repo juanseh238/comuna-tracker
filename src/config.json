@@ -123,6 +123,60 @@
                 "5": "#990000"
             }
         },
+        "icl_2022": {
+            "name": "Índice de Calidad de Limpieza 2022",
+            "type": "continuous",
+            "source": "basura",
+            "scope": "comunas",
+            "description": "Indicador agregado calculado en base a las mediciones sobre estado de la infraestructura de manejo de residuos, limpieza del mobiliario y la vía pública. El valor del indicador se encuentra entre 0 y 100, donde 0 implica que la comuna presenta el peor estado de limpieza y 100 el mejor.",    
+            "range_color_min": 0.5,
+            "range_color_max": 1,
+            "colorbar_settings": {
+                "title": "Porcentaje de cumplimiento",
+                "tickvals": [
+                    0.5, 0.6, 0.7, 0.8, 0.9, 1
+                ],
+                "ticktext": [
+                    "50",
+                    "60",
+                    "70",
+                    "80",
+                    "90",
+                    "100"
+                ],
+                "tickmode": "array"
+            }
+        },
+        "variacion_total_icl": {
+            "name": "Variación Porcentual ICL - 2021 a 2022",
+            "type": "continuous",
+            "source": "basura",
+            "scope": "comunas",
+            "description": "Variación porcentual entre el ICL calculado en el primer semestre del 2021 y el segundo semestre del 2022.",    
+            "range_color_min": 0,
+            "range_color_max": 0.25,
+            "colorbar_settings": {
+                "title": "% Variación",
+                "tickvals": [
+                    0,
+                    0.05,
+                    0.1,
+                    0.15,
+                    0.2,
+                    0.25
+                ],
+                "ticktext": [
+                    "0%",
+                    "5%",
+                    "10%",
+                    "15%",
+                    "20%",
+                    "25%"
+                ],
+                "tickmode": "array",
+                "tickformat": ".1%"
+            }
+        },
         "disposicion_de_residuos": {
             "name": "Disposición de Residuos - % Cumplimiento",
             "type": "continuous",
