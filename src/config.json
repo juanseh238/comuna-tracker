@@ -123,40 +123,150 @@
                 "5": "#990000"
             }
         },
-        "disposicion_de_residuos":{
+        "disposicion_de_residuos": {
             "name": "Disposición de Residuos - % Cumplimiento",
             "type": "continuous",
             "source": "basura",
             "scope": "comunas",
-            "description": "Porcentaje de cumplimiento en el servicio de disposición de residuos, medido en función de la presencia de reciclables separados, residuos voluminosos, escrombros y bolsas plásticas intactas en vereda o calle."
+            "description": "Porcentaje de cumplimiento en el servicio de disposición de residuos, medido en función de la presencia de reciclables separados, residuos voluminosos, escrombros y bolsas plásticas intactas en vereda o calle.",
+            "range_color_min": 0,
+            "range_color_max": 1,
+            "colorbar_settings": {
+                "title": "Porcentaje de cumplimiento",
+                "tickvals": [
+                    0,
+                    0.2,
+                    0.4,
+                    0.6,
+                    0.8,
+                    1
+                ],
+                "ticktext": [
+                    "0%",
+                    "20%",
+                    "40%",
+                    "60%",
+                    "80%",
+                    "100%"
+                ],
+                "tickmode": "array"
+            }
         },
-        "grafitis_pegatinas_y_otros":{
+        "grafitis_pegatinas_y_otros": {
             "name": "Grafitis y Otros - % Cumplimiento",
             "type": "continuous",
             "source": "basura",
             "scope": "comunas",
-            "description": "Porcentaje de cumplimiento en la limpieza de los frentes del mobiliario, contenedores y el nivel de higiene de los mismos."
+            "range_color_min": 0,
+            "range_color_max": 1,
+            "description": "Porcentaje de cumplimiento en la limpieza de los frentes del mobiliario, contenedores y el nivel de higiene de los mismos.",
+            "colorbar_settings": {
+                "title": "Porcentaje de cumplimiento",
+                "tickvals": [
+                    0,
+                    0.2,
+                    0.4,
+                    0.6,
+                    0.8,
+                    1
+                ],
+                "ticktext": [
+                    "0%",
+                    "20%",
+                    "40%",
+                    "60%",
+                    "80%",
+                    "100%"
+                ],
+                "tickmode": "array"
+            }
         },
-       "heces_caninas":{
-        "name": "Heces Caninas - % Cumplimiento",
-        "type": "continuous",
-        "source": "basura",
-        "scope": "comunas",
-        "description": "Porcentaje de cumplimiento en la limpieza de heces caninas en las cuadras de la comuna."
-    }, 
-       "limpieza_de_veredas_y_calles":{
-        "name": "Limpieza de Veredas - % Cumplimiento",
-        "type": "continuous",
-        "source": "basura",
-        "scope": "comunas",
-        "description": "Porcentaje de cumplimiento en la limpieza de residuos orgánicos y residuos secos en veredas y calles."
-    },
-       "mobiliario_de_higiene_urbana": {
-        "name": "Mobiliario de Higiene Urbana - % Cumplimiento",
-        "type": "continuous",
-        "source": "basura",
-        "scope": "comunas",
-        "description": "Porcentaje de cumplimiento en el cuidado de contenedores y cestos de basura. Esta variable considera también el nivel de llenado y la presencia de olores"
-       }
+        "heces_caninas": {
+            "name": "Heces Caninas - % Cumplimiento",
+            "type": "continuous",
+            "scope": "comunas",
+            "source": "basura",
+            "range_color_min": 0,
+            "range_color_max": 1,
+            "description": "Porcentaje de cumplimiento en la limpieza de heces caninas en las cuadras de la comuna.",
+            "colorbar_settings": {
+                "title": "Porcentaje de cumplimiento",
+                "tickvals": [
+                    0,
+                    0.2,
+                    0.4,
+                    0.6,
+                    0.8,
+                    1
+                ],
+                "ticktext": [
+                    "0%",
+                    "20%",
+                    "40%",
+                    "60%",
+                    "80%",
+                    "100%"
+                ],
+                "tickmode": "array"
+            }
+        },
+        "limpieza_de_veredas_y_calles": {
+            "name": "Limpieza de Veredas - % Cumplimiento",
+            "type": "continuous",
+            "scope": "comunas",
+            "source": "basura",
+            "range_color_min": 0,
+            "range_color_max": 1,
+            "description": "Porcentaje de cumplimiento en la limpieza de residuos orgánicos y residuos secos en veredas y calles.",
+            "colorbar_settings": {
+                "title": "Porcentaje de cumplimiento",
+                "tickvals": [
+                    0,
+                    0.2,
+                    0.4,
+                    0.6,
+                    0.8,
+                    1
+                ],
+                "ticktext": [
+                    "0%",
+                    "20%",
+                    "40%",
+                    "60%",
+                    "80%",
+                    "100%"
+                ],
+                "tickmode": "array"
+            }
+        },
+        "mobiliario_de_higiene_urbana": {
+            "name": "Mobiliario de Higiene Urbana - % Cumplimiento",
+            "type": "continuous",
+            "scope": "comunas",
+            "description": "Porcentaje de cumplimiento en el cuidado de contenedores y cestos de basura. Esta variable considera también el nivel de llenado y la presencia de olores",
+            "source": "basura",
+            "range_color_min": 0,
+            "range_color_max": 1,
+            "colorbar_settings": {
+                "title": "Porcentaje de cumplimiento",
+                "tickvals": [
+                    0,
+                    0.2,
+                    0.4,
+                    0.6,
+                    0.8,
+                    1
+                ],
+                "ticktext": [
+                    "0%",
+                    "20%",
+                    "40%",
+                    "60%",
+                    "80%",
+                    "100%"
+                ],
+                "tickmode": "array"
+            }
+        }
     }
 }

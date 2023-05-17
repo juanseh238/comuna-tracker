@@ -20,7 +20,10 @@ DATA = {
     "comunas": {
         "violencia_de_genero": gpd.read_file(
             "data/final/violencia-de-genero.geojson", driver="GeoJSON"
-        )
+        ),
+        "basura": gpd.read_file(
+            "data/final/basura_cumplimiento_med_nivel.geojson", driver="GeoJSON"
+        ),
     },
 }
 
@@ -34,6 +37,9 @@ DEFAULT_SCOPE = "radios_censales"
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
+
+# Parse the availble sources from the features
+SOURCES = list(set([FEATURE_CONFIG[feature]["source"] for feature in FEATURE_CONFIG]))
 
 ## Description box
 ## add feature description
@@ -50,7 +56,14 @@ description_box = html.Div(
 ## use a radio button to select the scope of the plots: comunas or radios censales
 scope_radio = html.Div(
     [
-        html.H3("Nivel", style={"margin-right": "10px", "text-align": "center", "font-size": "20px"}),
+        html.H3(
+            "Nivel",
+            style={
+                "margin-right": "10px",
+                "text-align": "center",
+                "font-size": "20px",
+            },
+        ),
         dcc.RadioItems(
             id="scope-radio",
             options=[
@@ -59,7 +72,7 @@ scope_radio = html.Div(
             ],
             value=DEFAULT_SCOPE,
             labelStyle={
-                "font-size": "18px",
+                "font-size": "20px",
             },
             style={
                 "display": "flex",
@@ -70,7 +83,13 @@ scope_radio = html.Div(
             },
         ),
     ],
-    style={"display": "flex", "flex-direction": "row", "justify-content": "center","gap": "30px"}
+    style={
+        "display": "flex",
+        "flex-direction": "row",
+        "align-items": "space-between",
+        "justify-content": "center",
+        "gap": "30px",
+    },
 )
 
 
@@ -110,23 +129,41 @@ control_box = html.Div(
                 html.Div(
                     [
                         html.H3("Indicador"),
-                        html.P("Seleccioná el indicador de interés para graficar:"),
+                        html.P(
+                            "1. Seleccioná la dimensión de interés:",
+                            style={"margin-top": "15px"},
+                        ),
+                        dcc.Dropdown(
+                            id="source-dropdown",
+                            clearable=False,
+                            # Get all sources for the given scope
+                            options=[
+                                {
+                                    "label": source.capitalize().replace("_", " "),
+                                    "value": source,
+                                }
+                                for source in SOURCES
+                            ],
+                            placeholder="Seleccioná una dimensión",
+                        ),
+                        html.P(
+                            "2. Seleccioná el indicador a graficar:",
+                            style={"margin-top": "15px"},
+                        ),
                         dcc.Dropdown(
                             id="feature-dropdown",
                             clearable=False,
-                            # default options to radios censales
-                            options=[
-                                {
-                                    "label": FEATURE_CONFIG[feature]["name"],
-                                    "value": feature,
-                                }
-                                for feature in FEATURE_CONFIG
-                                if DEFAULT_SCOPE in FEATURE_CONFIG[feature]["scope"]
-                            ],
                             # add a default text hinting at selecting a radio item first
                             placeholder="Seleccioná un indicador",
                         ),
-                    ]
+                    ],
+                    style={
+                        "display": "flex",
+                        "flex-direction": "column",
+                        "justify-content": "space-between",
+                        "gap": "5px",
+                        "width": "60%",
+                    },
                 ),
             ],
             style={
@@ -161,20 +198,49 @@ app.layout = html.Div(
 ## Callbacks
 # update dropdown options based on radio button selection
 @app.callback(
-    Output("feature-dropdown", "options"),
+    Output("source-dropdown", "options"),
     [Input("scope-radio", "value")],
 )
-def update_dropdown(scope_radio_value):
+def update_source_dropdown(scope_radio_value):
     """
     Update dropdown options bsaed on radio button selection.
     The radio button selection value matches the 'scope' field in the FEATURES config dict.
     """
     scope = SETTINGS_CONFIG[scope_radio_value]["scope"]
-    print([feature for feature in FEATURE_CONFIG])
+    SOURCES = list(
+        set(
+            [
+                FEATURE_CONFIG[feature]["source"]
+                for feature in FEATURE_CONFIG
+                if scope in FEATURE_CONFIG[feature]["scope"]
+            ]
+        )
+    )
     options = [
-        {"label": FEATURE_CONFIG[feature]["name"], "value": feature}
+        {"label": source.capitalize().replace("_", " "), "value": source}
+        for source in SOURCES
+    ]
+    return options
+
+
+@app.callback(
+    Output("feature-dropdown", "options"),
+    [Input("source-dropdown", "value")],
+)
+def update_feature_dropdpwn(source_dropdown_value):
+    """
+    Update dropdown options based on radio button selection.
+    The radio button selection value matches the 'scope' field in the FEATURES config dict.
+    """
+    if not source_dropdown_value:
+        return []
+    options = [
+        {
+            "label": FEATURE_CONFIG[feature]["name"],
+            "value": feature,
+        }
         for feature in FEATURE_CONFIG
-        if scope in FEATURE_CONFIG[feature]["scope"]
+        if source_dropdown_value in FEATURE_CONFIG[feature]["source"]
     ]
     return options
 
@@ -188,11 +254,14 @@ def update_dropdown(scope_radio_value):
     ],
     [
         Input("opacity-slider", "value"),
+        Input("source-dropdown", "value"),
         Input("feature-dropdown", "value"),
         Input("scope-radio", "value"),
     ],
 )
-def update_plot(slider_value, feature_dropdown_value, scope_radio_value):
+def update_plot(
+    slider_value, source_dropdown_value, feature_dropdown_value, scope_radio_value
+):
     # hide graph if no feature is selected
     if not feature_dropdown_value:
         hidden_graph_style = {"display": "none"}
@@ -203,41 +272,84 @@ def update_plot(slider_value, feature_dropdown_value, scope_radio_value):
         hidden_graph_style = {"display": "none"}
         return hidden_graph_style, None, None
 
-    source = FEATURE_CONFIG[feature_dropdown_value]["source"]
-    data = DATA[scope_radio_value][source]
+    data = DATA[scope_radio_value][source_dropdown_value]
+    # hide graph if the selected feature is not present in the dataset
+    if feature_dropdown_value not in data.columns:
+        hidden_graph_style = {"display": "none"}
+        return hidden_graph_style, None, None
 
     location_field = SETTINGS_CONFIG[scope_radio_value]["location_field"]
-    print("Location field: ", location_field)
-    print("Feature dropdown value: ", feature_dropdown_value)
-    print("Scope radio value: ", scope_radio_value)
 
-    # draw a new figure when dropdown changes
-    fig = px.choropleth_mapbox(
-        data,
-        geojson=data.set_index(location_field).geometry,
-        color=feature_dropdown_value,
-        color_discrete_map=FEATURE_CONFIG[feature_dropdown_value]["color_sequence"],
-        category_orders={
-            feature_dropdown_value: list(
-                FEATURE_CONFIG[feature_dropdown_value]["color_sequence"].keys()
+    if FEATURE_CONFIG[feature_dropdown_value]["type"] == "continuous":
+        colorbar_settings = FEATURE_CONFIG[feature_dropdown_value]["colorbar_settings"]
+        range_color = (FEATURE_CONFIG[feature_dropdown_value]["range_color_min"], FEATURE_CONFIG[feature_dropdown_value]["range_color_max"])
+        # draw a new figure when dropdown changes
+        fig = (
+            px.choropleth_mapbox(
+                data,
+                geojson=data.set_index(location_field).geometry,
+                color=feature_dropdown_value,
+                color_continuous_scale="RdYlGn",
+                range_color=range_color,
+                opacity=slider_value,
+                locations=location_field,
+                labels={
+                    feature_dropdown_value: FEATURE_CONFIG[feature_dropdown_value][
+                        "name"
+                    ],
+                    location_field: SETTINGS_CONFIG[scope_radio_value][
+                        "location_field_label"
+                    ],
+                },
+                )
+            .update_layout(
+                mapbox={
+                    "style": "open-street-map",
+                    "center": {"lon": -58.4, "lat": -34.6},
+                    "zoom": 11,
+                },
+                coloraxis={"colorbar":colorbar_settings},
             )
-        },
-        opacity=slider_value,
-        locations=location_field,
-        labels={
-            feature_dropdown_value: FEATURE_CONFIG[feature_dropdown_value]["name"],
-            location_field: SETTINGS_CONFIG[scope_radio_value]["location_field_label"],
-        },
-    ).update_layout(
-        mapbox={
-            "style": "open-street-map",
-            "center": {"lon": -58.4, "lat": -34.6},
-            "zoom": 11,
-        },
-    )
+            .update_traces(marker_opacity=slider_value)
+            .update_layout(uirevision="constant")
+        )
 
-    fig.update_traces(marker_opacity=slider_value)
-    fig.update_layout(uirevision="constant")
+    elif FEATURE_CONFIG[feature_dropdown_value]["type"] == "discrete":
+        # draw a new figure when dropdown changes
+        fig = (
+            px.choropleth_mapbox(
+                data,
+                geojson=data.set_index(location_field).geometry,
+                color=feature_dropdown_value,
+                color_discrete_map=FEATURE_CONFIG[feature_dropdown_value][
+                    "color_sequence"
+                ],
+                category_orders={
+                    feature_dropdown_value: list(
+                        FEATURE_CONFIG[feature_dropdown_value]["color_sequence"].keys()
+                    )
+                },
+                opacity=slider_value,
+                locations=location_field,
+                labels={
+                    feature_dropdown_value: FEATURE_CONFIG[feature_dropdown_value][
+                        "name"
+                    ],
+                    location_field: SETTINGS_CONFIG[scope_radio_value][
+                        "location_field_label"
+                    ],
+                },
+            )
+            .update_layout(
+                mapbox={
+                    "style": "open-street-map",
+                    "center": {"lon": -58.4, "lat": -34.6},
+                    "zoom": 11,
+                },
+            )
+            .update_traces(marker_opacity=slider_value)
+            .update_layout(uirevision="constant")
+        )
 
     # update the feature description
     description_box_children = [
