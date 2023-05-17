@@ -3,3 +3,4 @@ geopandas==0.12.2
 plotly==5.14.1
 simplejson==3.19.1
 gunicorn
+dash-bootstrap-components
