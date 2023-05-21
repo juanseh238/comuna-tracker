@@ -321,6 +321,48 @@
                 ],
                 "tickmode": "array"
             }
+        },
+        "quintil_distancia_juegoteca": {
+            "name": "Distancia a Juegoteca más cercana",
+            "type": "discrete",
+            "source": "calidad_de_vida",
+            "scope": "radios_censales",
+            "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de distancias respecto a la juegoteca más cercana. Un valor de 5 implica que el radio censal está mas cerca de una juegoteca que el 80% de los radios censales de la ciudad.",
+            "color_sequence": {
+                "5": "#FFC1C1",
+                "4": "#FF8F8F",
+                "3": "#FF5C5C",
+                "2": "#E60000",
+                "1": "#990000"
+            }
+        },
+        "quintil_distancia_polideportivo": {
+            "name": "Distancia a polideportivo más cercano",
+            "type": "discrete",
+            "source": "calidad_de_vida",
+            "scope": "radios_censales",
+            "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución de distancias respecto al polideportivo más cercano. Un valor de 5 implica que el radio censal está mas cerca de un polideportivo que el 80% de los radios censales de la ciudad.",
+            "color_sequence": {
+                "5": "#FFC1C1",
+                "4": "#FF8F8F",
+                "3": "#FF5C5C",
+                "2": "#E60000",
+                "1": "#990000"
+            }
+        },
+        "quintil_indicador_cultura": {
+            "name": "Indicador de Actividad Cultural",
+            "type": "discrete",
+            "source": "calidad_de_vida",
+            "scope": "radios_censales",
+            "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución del indicador de actividad cultural desarrollado para este análisis. El indicador corresponde al quintil de distancia a los 5 espacios con actividades culturales, ponderado por la cantidad de eventos que tomaron lugar en esos espacios en el año 2021. Un valor de 5 implica que el radio censal tuvo mejor acceso y/o mayor oferta de actividades culturales del GCBA durante el 2021 (el último dato registrado).",
+            "color_sequence": {
+                "1": "#FFC1C1",
+                "2": "#FF8F8F",
+                "3": "#FF5C5C",
+                "4": "#E60000",
+                "5": "#990000"
+            }
         }
     }
 }

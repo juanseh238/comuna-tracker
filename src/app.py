@@ -16,6 +16,9 @@ DATA = {
             "data/final/data_criminalidad.geojson", driver="GeoJSON"
         ),
         "comisarias": gpd.read_file("data/final/comisarias.geojson", driver="GeoJSON"),
+        "calidad_de_vida": gpd.read_file(
+            "data/final/indicadores_cultura.geojson", driver="GeoJSON"
+        ),
     },
     "comunas": {
         "violencia_de_genero": gpd.read_file(
