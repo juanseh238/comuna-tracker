@@ -128,13 +128,18 @@
             "type": "continuous",
             "source": "basura",
             "scope": "comunas",
-            "description": "Indicador agregado calculado en base a las mediciones sobre estado de la infraestructura de manejo de residuos, limpieza del mobiliario y la vía pública. El valor del indicador se encuentra entre 0 y 100, donde 0 implica que la comuna presenta el peor estado de limpieza y 100 el mejor.",    
+            "description": "Indicador agregado calculado en base a las mediciones sobre estado de la infraestructura de manejo de residuos, limpieza del mobiliario y la vía pública. El valor del indicador se encuentra entre 0 y 100, donde 0 implica que la comuna presenta el peor estado de limpieza y 100 el mejor.",
             "range_color_min": 0.5,
             "range_color_max": 1,
             "colorbar_settings": {
                 "title": "Porcentaje de cumplimiento",
                 "tickvals": [
-                    0.5, 0.6, 0.7, 0.8, 0.9, 1
+                    0.5,
+                    0.6,
+                    0.7,
+                    0.8,
+                    0.9,
+                    1
                 ],
                 "ticktext": [
                     "50",
@@ -152,7 +157,7 @@
             "type": "continuous",
             "source": "basura",
             "scope": "comunas",
-            "description": "Variación porcentual entre el ICL calculado en el primer semestre del 2021 y el segundo semestre del 2022.",    
+            "description": "Variación porcentual entre el ICL calculado en el primer semestre del 2021 y el segundo semestre del 2022.",
             "range_color_min": 0,
             "range_color_max": 0.25,
             "colorbar_settings": {
@@ -357,11 +362,17 @@
             "scope": "radios_censales",
             "description": "Valor entre 1 y 5 que representa el quintil en el que se ubica el radio censal en la distribución del indicador de actividad cultural desarrollado para este análisis. El indicador corresponde al quintil de distancia a los 5 espacios con actividades culturales, ponderado por la cantidad de eventos que tomaron lugar en esos espacios en el año 2021. Un valor de 5 implica que el radio censal tuvo mejor acceso y/o mayor oferta de actividades culturales del GCBA durante el 2021 (el último dato registrado).",
             "color_sequence": {
-                "1": "#FFC1C1",
-                "2": "#FF8F8F",
-                "3": "#FF5C5C",
-                "4": "#E60000",
-                "5": "#990000"
+                    "1": "#440154",
+                    "2": "#482878",
+                    "3": "#3E4989",
+                    "4": "#31688E",
+                    "5": "#26828E",
+                    "6": "#1F9E89",
+                    "7": "#35B779",
+                    "8": "#6ECE58",
+                    "9": "#B5DD2B",
+                    "10": "#FDE725"
+                  
             }
         }
     }
